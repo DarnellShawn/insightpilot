@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Env / secrets
+.env
+.streamlit/secrets.toml
+
+# Data (generated locally, never committed)
+data/*.csv
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,16 @@
+# Render Blueprint — deploy the backend with one click:
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: insightpilot-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false          # set manually in the Render dashboard (secret)
+      - key: REPORT_MODEL
+        value: claude-fable-5
+      - key: ALLOWED_ORIGINS
+        value: "*"           # tighten to your Streamlit URL after first deploy
