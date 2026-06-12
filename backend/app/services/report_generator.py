@@ -50,6 +50,17 @@ Rules:
 """
 
 
+# Models that support (and benefit from) adaptive thinking. Haiku and older
+# models reject the parameter with a 400, so we only send it where supported.
+_ADAPTIVE_THINKING_PREFIXES = (
+    "claude-fable",
+    "claude-opus-4-6",
+    "claude-opus-4-7",
+    "claude-opus-4-8",
+    "claude-sonnet-4-6",
+)
+
+
 def generate_report(metrics: Metrics, settings: Settings) -> ReportResult:
     if not settings.report_enabled:
         return ReportResult(
@@ -61,12 +72,16 @@ def generate_report(metrics: Metrics, settings: Settings) -> ReportResult:
     payload = json.dumps(metrics.model_dump(), ensure_ascii=False)
     client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
 
+    extra: dict = {}
+    if settings.report_model.startswith(_ADAPTIVE_THINKING_PREFIXES):
+        extra["thinking"] = {"type": "adaptive"}
+
     try:
         with client.messages.stream(
             model=settings.report_model,
             max_tokens=settings.report_max_tokens,
-            thinking={"type": "adaptive"},
             system=SYSTEM_PROMPT,
+            **extra,
             messages=[{
                 "role": "user",
                 "content": (
