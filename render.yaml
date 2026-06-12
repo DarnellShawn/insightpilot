@@ -11,6 +11,6 @@ services:
       - key: ANTHROPIC_API_KEY
         sync: false          # set manually in the Render dashboard (secret)
       - key: REPORT_MODEL
-        value: claude-fable-5
+        value: claude-haiku-4-5   # cheapest current model for testing; switch to claude-fable-5 for max quality
       - key: ALLOWED_ORIGINS
         value: "*"           # tighten to your Streamlit URL after first deploy
