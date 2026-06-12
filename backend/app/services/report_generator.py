@@ -11,8 +11,11 @@ send neither. Keep it that way unless you switch to an older model family.
 from __future__ import annotations
 
 import json
+import logging
 
 import anthropic
+
+logger = logging.getLogger("uvicorn.error")
 
 from app.config import Settings
 from app.models.schemas import Metrics, ReportResult
@@ -97,7 +100,8 @@ def generate_report(metrics: Metrics, settings: Settings) -> ReportResult:
         return ReportResult(generated=False, error="Claude API rate limit reached — try again shortly.")
     except anthropic.APIStatusError as exc:
         return ReportResult(generated=False, error=f"Claude API error ({exc.status_code}): {exc.message}")
-    except anthropic.APIConnectionError:
+    except anthropic.APIConnectionError as exc:
+        logger.error("Claude API connection error: %r (cause: %r)", exc, exc.__cause__)
         return ReportResult(generated=False, error="Could not reach the Claude API (network error).")
 
     if message.stop_reason == "refusal":

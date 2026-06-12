@@ -52,8 +52,11 @@ class Settings(BaseModel):
 @lru_cache
 def get_settings() -> Settings:
     origins = os.getenv("ALLOWED_ORIGINS", "*")
+    # Strip whitespace/newlines — a key pasted into a dashboard with a trailing
+    # newline produces an invalid HTTP header that surfaces as a connection error.
+    api_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip() or None
     return Settings(
-        anthropic_api_key=os.getenv("ANTHROPIC_API_KEY"),
+        anthropic_api_key=api_key,
         report_model=os.getenv("REPORT_MODEL", "claude-fable-5"),
         report_max_tokens=int(os.getenv("REPORT_MAX_TOKENS", "8000")),
         max_upload_bytes=int(os.getenv("MAX_UPLOAD_BYTES", str(25 * 1024 * 1024))),
