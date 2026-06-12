@@ -5,6 +5,23 @@ cleans the data and computes business metrics **entirely in memory** (no databas
 privacy-by-design / GDPR-friendly), and Claude generates an executive report with
 actionable insights.
 
+## 🚀 Try it
+
+| | |
+|---|---|
+| **Web app** | [insightpilot-app.streamlit.app](https://insightpilot-app.streamlit.app) |
+| **API** | [insightpilot-api-sp9p.onrender.com/health](https://insightpilot-api-sp9p.onrender.com/health) |
+| **macOS desktop app** | [Releases → InsightPilot.zip](https://github.com/DarnellShawn/insightpilot/releases/latest) (Apple Silicon) |
+
+> ℹ️ The backend runs on a free tier and sleeps after inactivity — the first request
+> can take ~1 minute. The app shows a retry button while it wakes up.
+>
+> The desktop app is an Electron wrapper around the web app (requires internet).
+> macOS may warn because the app is unsigned: right-click → **Open** the first time.
+
+No test data handy? Download a ready-made sample CSV by running
+`python scripts/generate_synthetic_data.py` — or just try any Shopify order export.
+
 ## Architecture
 
 ```
