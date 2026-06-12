@@ -75,7 +75,14 @@ with st.sidebar:
     url = backend_url()
     health = backend_health(url)
     if health is None:
-        st.error(f"Backend unreachable at `{url}`. Start it and reload.")
+        st.error(f"Backend unreachable at `{url}`.")
+        st.caption(
+            "The free-tier backend sleeps after inactivity and needs ~1 minute "
+            "to wake up. Try again shortly."
+        )
+        if st.button("🔄 Retry connection"):
+            backend_health.clear()
+            st.rerun()
     else:
         st.success(f"Backend connected · v{health['version']}")
         if health["report_enabled"]:
