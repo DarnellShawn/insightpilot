@@ -52,9 +52,11 @@ class Settings(BaseModel):
 @lru_cache
 def get_settings() -> Settings:
     origins = os.getenv("ALLOWED_ORIGINS", "*")
-    # Strip whitespace/newlines — a key pasted into a dashboard with a trailing
-    # newline produces an invalid HTTP header that surfaces as a connection error.
-    api_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip() or None
+    # Remove ALL whitespace — a key copied from a console that displays it
+    # wrapped across multiple lines carries embedded newlines, which produce an
+    # invalid HTTP header that surfaces as a connection error. API keys never
+    # legitimately contain whitespace.
+    api_key = "".join((os.getenv("ANTHROPIC_API_KEY") or "").split()) or None
     return Settings(
         anthropic_api_key=api_key,
         report_model=os.getenv("REPORT_MODEL", "claude-fable-5"),
